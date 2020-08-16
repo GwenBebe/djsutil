@@ -59,7 +59,14 @@ export class Book extends Gui {
         else embed.setImage(this.pages[this.pageNum]);
         gui.edit(embed).catch(() => null);
         if (this.pages.length > 1) {
-            ['⏮️', '◀️', '⏹️', '▶️', '⏭️', '🗑️'].map(e => gui.react(e));
+            [
+                this.client.lang.emojis.first,
+                this.client.lang.emojis.previous,
+                this.client.lang.emojis.stop,
+                this.client.lang.emojis.next,
+                this.client.lang.emojis.last,
+                this.client.lang.emojis.delete
+            ].map(e => gui.react(e));
         }
         return gui;
     }

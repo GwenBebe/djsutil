@@ -2,10 +2,14 @@
     "name": "djsutil",
     "version": "1.0.0",
     "description": "Discord.js Utility Package",
-    "main": "dist/index.js",
-    "license": "MIT",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "license": "GPL-3.0",
+    "author": "gwenbebe",
     "scripts": {
-        "owo": "pm2 start --name DJSUtil npm -- run dev --watch --ignore-watch dist/*",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm run lint",
+        "preversion": "npm run lint",
         "prod": "yarn build && export NODE_ENV=production && node .",
         "dev": "yarn build && export NODE_ENV=development && node .",
         "production": "yarn build && export NODE_ENV=production && yarn start",
@@ -18,9 +22,7 @@
         "cleanCache": "npm cache clean --force",
         "deleteModules": "rm -rf node_modules/*",
         "deleteLock": "rm yarn.lock",
-        "installModules": "yarn install",
-        "author": "Gwen Phalan",
-        "license": "MIT"
+        "installModules": "yarn install"
     },
     "husky": {
         "hooks": {
@@ -47,7 +49,7 @@
         "prettier": "^2.0.5"
     },
     "eslintIgnore": [
-        "dist",
+        "lib",
         ".vscode"
     ]
 }
