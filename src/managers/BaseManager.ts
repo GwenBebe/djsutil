@@ -5,7 +5,7 @@ export class BaseManager<Data> {
     client: Client;
     data?: object;
     cache: Collection<string, Data>;
-    
+
     constructor(client: Client, data?: object) {
         this.client = client;
         this.data = data;

@@ -2,7 +2,6 @@ import { User, TextChannel, Guild, DMChannel, NewsChannel, Message, Role, GuildC
 import { Client } from '../client/Client';
 import { Gui } from './Gui';
 import { ValueType, parseType } from '../helpers/Parse';
-import { parse } from 'path';
 
 export class Prompt extends Gui {
     constructor(

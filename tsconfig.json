@@ -12,7 +12,7 @@
         "noUnusedParameters": true,
         "noImplicitAny": true,
         "removeComments": true,
-        "outDir": "./dist/",
+        "outDir": "./lib/",
         "strict": true,
         "types": ["node"],
         "target": "es2019",

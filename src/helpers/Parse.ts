@@ -43,108 +43,6 @@ export type ValueType =
     | 'snowflake'
     | 'timeLength';
 
-export async function parseType(type: 'number', str: string): Promise<number | void>;
-
-export async function parseType(type: 'color', str: string): Promise<string | void>;
-
-export async function parseType(type: 'string', str: string): Promise<string | void>;
-
-export async function parseType(type: 'url', str: string): Promise<string | void>;
-
-export async function parseType(type: 'guildMember', str: string, guild: Guild): Promise<Collection<string, GuildMember>>;
-
-export async function parseType(type: 'bannedUser', str: string, guild: Guild): Promise<Collection<string, { user: User; reason: string }> | void>;
-
-export async function parseType(type: 'role', str: string, guild: Guild): Promise<Collection<string, Role> | void>;
-
-export async function parseType(type: 'textChannel', str: string, guild: Guild): Promise<Collection<string, TextChannel | NewsChannel> | void>;
-
-export async function parseType(type: 'voiceChannel', str: string, guild: Guild): Promise<Collection<string, VoiceChannel> | void>;
-
-export async function parseType(type: 'guildChannel', str: string, guild: Guild): Promise<Collection<string, GuildChannel> | void>;
-
-export async function parseType(type: 'boolean', str: string): Promise<boolean | void>;
-
-export async function parseType(type: 'snowflake', str: string): Promise<string | void>;
-
-export async function parseType(type: 'timeLength', str: string): Promise<number | void>;
-
-export async function parseType(
-    type: ValueType,
-    str: string,
-    guild?: Guild
-): Promise<
-    | number
-    | string
-    | Collection<string, GuildMember>
-    | Collection<string, Role>
-    | Collection<string, VoiceChannel>
-    | Collection<string, GuildChannel>
-    | Collection<string, TextChannel | NewsChannel>
-    | boolean
-    | Collection<string, { user: User; reason: string }>
-    | void
->;
-
-export async function parseType(
-    type: ValueType,
-    str: string,
-    guild?: Guild
-): Promise<
-    | number
-    | string
-    | Collection<string, GuildMember>
-    | Collection<string, Role>
-    | Collection<string, VoiceChannel>
-    | Collection<string, GuildChannel>
-    | Collection<string, TextChannel | NewsChannel>
-    | boolean
-    | Collection<string, { user: User; reason: string }>
-    | void
-> {
-    switch (type) {
-        case 'number':
-            return Parse.number(str);
-        case 'color':
-            return Parse.color(str);
-        case 'string':
-            return str;
-        case 'url':
-            return Parse.url(str);
-        case 'guildMember':
-            if (!guild) throw new Error(`Attempted To Get Member In DMS`);
-
-            return Parse.member(guild, str);
-        case 'bannedUser':
-            if (!guild) throw new Error(`Attempted To Get Member In DMS`);
-
-            return Parse.bannedUser(guild, str);
-        case 'role':
-            if (!guild) throw new Error(`Attempted To Get Banned User In DMS`);
-
-            return Parse.role(guild, str);
-        case 'textChannel':
-            if (!guild) throw new Error(`Attempted To Get Role In DMS`);
-
-            return Parse.textChannel(guild, str);
-        case 'voiceChannel':
-            if (!guild) throw new Error(`Attempted To Get Text Channel In DMS`);
-
-            return Parse.voiceChannel(guild, str);
-        case 'guildChannel':
-            if (!guild) throw new Error(`Attempted To Get Voice Channel In DMS`);
-
-            return Parse.guildChannel(guild, str);
-        case 'boolean':
-            return Parse.boolean(str);
-        case 'snowflake':
-            return Parse.snowflake(str);
-        case 'timeLength':
-            return Parse.timeLength(str);
-        default:
-            return;
-    }
-}
 /**
  * Used to parse strings into various values.
  *
@@ -365,5 +263,108 @@ export class Parse {
         result.forEach(c => (c instanceof TextChannel || c instanceof NewsChannel ? chans.set(c.id, c) : null));
 
         return chans;
+    }
+}
+
+export async function parseType(type: 'number', str: string): Promise<number | void>;
+
+export async function parseType(type: 'color', str: string): Promise<string | void>;
+
+export async function parseType(type: 'string', str: string): Promise<string | void>;
+
+export async function parseType(type: 'url', str: string): Promise<string | void>;
+
+export async function parseType(type: 'guildMember', str: string, guild: Guild): Promise<Collection<string, GuildMember>>;
+
+export async function parseType(type: 'bannedUser', str: string, guild: Guild): Promise<Collection<string, { user: User; reason: string }> | void>;
+
+export async function parseType(type: 'role', str: string, guild: Guild): Promise<Collection<string, Role> | void>;
+
+export async function parseType(type: 'textChannel', str: string, guild: Guild): Promise<Collection<string, TextChannel | NewsChannel> | void>;
+
+export async function parseType(type: 'voiceChannel', str: string, guild: Guild): Promise<Collection<string, VoiceChannel> | void>;
+
+export async function parseType(type: 'guildChannel', str: string, guild: Guild): Promise<Collection<string, GuildChannel> | void>;
+
+export async function parseType(type: 'boolean', str: string): Promise<boolean | void>;
+
+export async function parseType(type: 'snowflake', str: string): Promise<string | void>;
+
+export async function parseType(type: 'timeLength', str: string): Promise<number | void>;
+
+export async function parseType(
+    type: ValueType,
+    str: string,
+    guild?: Guild
+): Promise<
+    | number
+    | string
+    | Collection<string, GuildMember>
+    | Collection<string, Role>
+    | Collection<string, VoiceChannel>
+    | Collection<string, GuildChannel>
+    | Collection<string, TextChannel | NewsChannel>
+    | boolean
+    | Collection<string, { user: User; reason: string }>
+    | void
+>;
+
+export async function parseType(
+    type: ValueType,
+    str: string,
+    guild?: Guild
+): Promise<
+    | number
+    | string
+    | Collection<string, GuildMember>
+    | Collection<string, Role>
+    | Collection<string, VoiceChannel>
+    | Collection<string, GuildChannel>
+    | Collection<string, TextChannel | NewsChannel>
+    | boolean
+    | Collection<string, { user: User; reason: string }>
+    | void
+> {
+    switch (type) {
+        case 'number':
+            return Parse.number(str);
+        case 'color':
+            return Parse.color(str);
+        case 'string':
+            return str;
+        case 'url':
+            return Parse.url(str);
+        case 'guildMember':
+            if (!guild) throw new Error(`Attempted To Get Member In DMS`);
+
+            return Parse.member(guild, str);
+        case 'bannedUser':
+            if (!guild) throw new Error(`Attempted To Get Member In DMS`);
+
+            return Parse.bannedUser(guild, str);
+        case 'role':
+            if (!guild) throw new Error(`Attempted To Get Banned User In DMS`);
+
+            return Parse.role(guild, str);
+        case 'textChannel':
+            if (!guild) throw new Error(`Attempted To Get Role In DMS`);
+
+            return Parse.textChannel(guild, str);
+        case 'voiceChannel':
+            if (!guild) throw new Error(`Attempted To Get Text Channel In DMS`);
+
+            return Parse.voiceChannel(guild, str);
+        case 'guildChannel':
+            if (!guild) throw new Error(`Attempted To Get Voice Channel In DMS`);
+
+            return Parse.guildChannel(guild, str);
+        case 'boolean':
+            return Parse.boolean(str);
+        case 'snowflake':
+            return Parse.snowflake(str);
+        case 'timeLength':
+            return Parse.timeLength(str);
+        default:
+            return;
     }
 }
