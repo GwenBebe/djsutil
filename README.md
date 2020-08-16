@@ -1,5 +1,7 @@
 # djsutil
 
+[![NPM](https://nodei.co/npm/djsutil.png)](https://nodei.co/npm/djsutil/)
+
 ## About <a name = "about"></a>
 
 DJSUtil is a utility library used with discord.js. It has things like paginators, message prompts, and embed managers.

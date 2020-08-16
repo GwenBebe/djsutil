@@ -1,11 +1,23 @@
 {
     "name": "djsutil",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "Discord.js Utility Package",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "GPL-3.0",
     "author": "gwenbebe",
+    "keywords": [
+        "discord-js",
+        "discord.js",
+        "discord",
+        "utility",
+        "typescript"
+    ],
+    "homepage": "https://github.com/GwenBebe/djsutil",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/GwenBebe/djsutil"
+    },
     "scripts": {
         "prepare": "npm run build",
         "prepublishOnly": "npm run lint",
@@ -18,7 +30,7 @@
         "clean": "rm -rf dist/*",
         "reinstall": "yarn cleanCache && yarn deleteModules && yarn deleteLock && yarn installModules",
         "build": "tsc",
-        "start": "pm2 start --name DJSUtil npm -- run prod",
+        "start": "npm run prod",
         "cleanCache": "npm cache clean --force",
         "deleteModules": "rm -rf node_modules/*",
         "deleteLock": "rm yarn.lock",
@@ -30,15 +42,14 @@
         }
     },
     "dependencies": {
-        "@types/node": "^13.13.1",
-        "@types/tinycolor2": "^1.4.2",
-        "@types/ws": "^7.2.4",
         "discord.js": "^12.2.0",
-        "pm2": "^4.4.0",
-        "tinycolor2": "^1.4.1",
-        "typescript": "^3.9.5"
+        "tinycolor2": "^1.4.1"
     },
     "devDependencies": {
+        "typescript": "^3.9.5",
+        "@types/tinycolor2": "^1.4.2",
+        "@types/ws": "^7.2.4",
+        "@types/node": "^13.13.1",
         "@typescript-eslint/eslint-plugin": "^2.31.0",
         "@typescript-eslint/parser": "^2.31.0",
         "eslint": "^6.8.0",
