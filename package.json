@@ -1,0 +1,53 @@
+{
+    "name": "djsutil",
+    "version": "1.0.0",
+    "description": "Discord.js Utility Package",
+    "main": "dist/index.js",
+    "license": "MIT",
+    "scripts": {
+        "owo": "pm2 start --name DJSUtil npm -- run dev --watch --ignore-watch dist/*",
+        "prod": "yarn build && export NODE_ENV=production && node .",
+        "dev": "yarn build && export NODE_ENV=development && node .",
+        "production": "yarn build && export NODE_ENV=production && yarn start",
+        "test": "tsc -p tsconfig.test.json && yarn lint",
+        "lint": "eslint ./src/**/*.ts --fix",
+        "clean": "rm -rf dist/*",
+        "reinstall": "yarn cleanCache && yarn deleteModules && yarn deleteLock && yarn installModules",
+        "build": "tsc",
+        "start": "pm2 start --name DJSUtil npm -- run prod",
+        "cleanCache": "npm cache clean --force",
+        "deleteModules": "rm -rf node_modules/*",
+        "deleteLock": "rm yarn.lock",
+        "installModules": "yarn install",
+        "author": "Gwen Phalan",
+        "license": "MIT"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "precise-commits && yarn lint"
+        }
+    },
+    "dependencies": {
+        "@types/node": "^13.13.1",
+        "@types/tinycolor2": "^1.4.2",
+        "@types/ws": "^7.2.4",
+        "discord.js": "^12.2.0",
+        "pm2": "^4.4.0",
+        "tinycolor2": "^1.4.1",
+        "typescript": "^3.9.5"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^2.31.0",
+        "@typescript-eslint/parser": "^2.31.0",
+        "eslint": "^6.8.0",
+        "eslint-config-prettier": "^6.10.1",
+        "eslint-plugin-prettier": "^3.1.2",
+        "husky": "^4.2.3",
+        "precise-commits": "^1.0.2",
+        "prettier": "^2.0.5"
+    },
+    "eslintIgnore": [
+        "dist",
+        ".vscode"
+    ]
+}
