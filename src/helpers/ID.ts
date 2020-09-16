@@ -1,4 +1,4 @@
-const ids: string[] = [];
+const ids: Set<string> = new Set();
 
 const createId = (): string => {
     const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -8,7 +8,8 @@ const createId = (): string => {
 };
 
 export const newId = (): string => {
-    let id = createId();
-    while (ids.includes(id)) id = createId();
+    const id = createId();
+    if (ids.has(id)) return newId();
+    ids.add(id);
     return id;
 };

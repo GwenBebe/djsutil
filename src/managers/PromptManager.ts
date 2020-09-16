@@ -1,4 +1,5 @@
 import { Client } from '../client/Client';
+import { Colors } from '../interfaces';
 import { BaseManager } from './BaseManager';
 import { Prompt } from '../structure/Prompt';
 import { User, TextChannel, DMChannel, NewsChannel, Guild } from 'discord.js';
@@ -32,7 +33,7 @@ export class PromptManager extends BaseManager<Prompt> {
      * @returns
      * @memberof PromptManager
      */
-    new(user: User, channel: TextChannel | DMChannel | NewsChannel, type: 'BASIC' | 'INFO' | 'SUCCESS' | 'ERROR' = 'BASIC', guild?: Guild) {
+    new(user: User, channel: TextChannel | DMChannel | NewsChannel, type: keyof Colors = 'BASIC', guild?: Guild) {
         const book = new Prompt(user, channel, this.client, guild, type);
         this.add(book, newId());
         return book;

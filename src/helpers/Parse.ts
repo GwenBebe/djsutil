@@ -57,12 +57,10 @@ export class Parse {
      * @returns {(Promise<number | void>)}
      * @memberof Parse
      */
-    static async number(str: string): Promise<number | void> {
+    static number(str: string) {
         const number = str.match(/\d+/);
 
-        if (!number) return;
-
-        return parseInt(number[0]);
+        return number ? parseInt(number[0]) : null;
     }
 
     /**
@@ -72,12 +70,10 @@ export class Parse {
      * @returns {(Promise<string | void>)}
      * @memberof Parse
      */
-    static async color(str: string): Promise<string | void> {
+    static color(str: string) {
         const colorData = color(str);
 
-        if (!colorData.isValid()) return;
-
-        return colorData.toHexString();
+        return colorData.isValid() ? colorData.toHexString() : null;
     }
 
     /**
@@ -87,12 +83,10 @@ export class Parse {
      * @returns {(Promise<string | void>)}
      * @memberof Parse
      */
-    static async url(str: string): Promise<string | void> {
-        const url = str.match(linkRegex);
+    static url(str: string) {
+        const url = linkRegex.exec(str);
 
-        if (!url) return;
-
-        return url[0];
+        return url?.[0] || null;
     }
 
     /**
@@ -102,12 +96,10 @@ export class Parse {
      * @returns {(Promise<string | void>)}
      * @memberof Parse
      */
-    static async boolean(str: string): Promise<boolean | void> {
+    static boolean(str: string) {
         const bool = str.match(/(true|false)/gi);
 
-        if (!bool) return;
-
-        return bool[0] === 'true';
+        return bool ? bool[0] === 'true' : null;
     }
 
     /**
@@ -117,12 +109,10 @@ export class Parse {
      * @returns {(Promise<string | void>)}
      * @memberof Parse
      */
-    static async snowflake(str: string): Promise<string | void> {
+    static snowflake(str: string) {
         const snowflake = str.match(/\d{17,19}/gi);
 
-        if (!snowflake) return;
-
-        return snowflake[0];
+        return snowflake?.[0] || null;
     }
 
     /**
@@ -132,12 +122,12 @@ export class Parse {
      * @returns {(Promise<number | void>)}
      * @memberof Parse
      */
-    static async timeLength(str: string): Promise<number | void> {
+    static timeLength(str: string) {
         try {
             const time = timestring(str, 'ms');
             return time;
         } catch (err) {
-            return;
+            return null;
         }
     }
 
@@ -149,12 +139,8 @@ export class Parse {
      * @returns {(Promise<GuildMember | void>)}
      * @memberof Parse
      */
-    static async member(guild: Guild, str: string): Promise<Collection<string, GuildMember>> {
-        const members = guild.members.cache;
-
-        const result = members.filter(memberFilterInexact(str));
-
-        return result;
+    static member(guild: Guild, str: string) {
+        return guild.members.cache.filter(memberFilterInexact(str));
     }
 
     /**
@@ -165,12 +151,10 @@ export class Parse {
      * @returns {( Promise<Collection<string, { user: User; reason: string }> | void>>)}
      * @memberof Parse
      */
-    static async bannedUser(guild: Guild, str: string): Promise<Collection<string, { user: User; reason: string }>> {
+    static async bannedUser(guild: Guild, str: string) {
         const bans = await guild.fetchBans();
 
-        const result = bans.filter(bannedMemberFilterInexact(str));
-
-        return result;
+        return bans.filter(bannedMemberFilterInexact(str));
     }
 
     /**
@@ -181,12 +165,8 @@ export class Parse {
      * @returns {(Promise<Role | void>)}
      * @memberof Parse
      */
-    static async role(guild: Guild, str: string): Promise<Collection<string, Role>> {
-        const roles = guild.roles.cache;
-
-        const result = roles.filter(roleFilterInexact(str));
-
-        return result;
+    static role(guild: Guild, str: string) {
+        return guild.roles.cache.filter(roleFilterInexact(str));
     }
 
     /**
@@ -197,12 +177,8 @@ export class Parse {
      * @returns {(Promise<GuildChannel | void>)}
      * @memberof Parse
      */
-    static async guildChannel(guild: Guild, str: string): Promise<Collection<string, GuildChannel>> {
-        const channels = guild.channels.cache;
-
-        const result = channels.filter(channelFilterInexact(str));
-
-        return result;
+    static guildChannel(guild: Guild, str: string) {
+        return guild.channels.cache.filter(channelFilterInexact(str));
     }
 
     /**
@@ -213,16 +189,8 @@ export class Parse {
      * @returns {(Promise<VoiceChannel | void>)}
      * @memberof Parse
      */
-    static async voiceChannel(guild: Guild, str: string): Promise<Collection<string, VoiceChannel>> {
-        const channels = guild.channels.cache;
-
-        const result = channels.filter(channelFilterInexact(str));
-
-        const chans: Collection<string, VoiceChannel> = new Collection();
-
-        result.forEach(c => (c instanceof VoiceChannel ? chans.set(c.id, c) : null));
-
-        return chans;
+    static voiceChannel(guild: Guild, str: string) {
+        return guild.channels.cache.filter(c => c instanceof VoiceChannel && channelFilterInexact(str)(c)) as Collection<string, VoiceChannel>;
     }
 
     /**
@@ -233,16 +201,8 @@ export class Parse {
      * @returns {(Promise<CategoryChannel | void>)}
      * @memberof Parse
      */
-    static async categoryChannel(guild: Guild, str: string): Promise<Collection<string, CategoryChannel>> {
-        const channels = guild.channels.cache;
-
-        const result = channels.filter(channelFilterInexact(str));
-
-        const chans: Collection<string, CategoryChannel> = new Collection();
-
-        result.forEach(c => (c instanceof CategoryChannel ? chans.set(c.id, c) : null));
-
-        return chans;
+    static categoryChannel(guild: Guild, str: string) {
+        return guild.channels.cache.filter(c => c instanceof CategoryChannel && channelFilterInexact(str)(c)) as Collection<string, CategoryChannel>;
     }
 
     /**
@@ -253,78 +213,32 @@ export class Parse {
      * @returns {(Promise<TextChannel | NewsChannel | void>)}
      * @memberof Parse
      */
-    static async textChannel(guild: Guild, str: string): Promise<Collection<string, TextChannel | NewsChannel>> {
-        const channels = guild.channels.cache;
-
-        const result = channels.filter(channelFilterInexact(str));
-
-        const chans: Collection<string, TextChannel | NewsChannel> = new Collection();
-
-        result.forEach(c => (c instanceof TextChannel || c instanceof NewsChannel ? chans.set(c.id, c) : null));
-
-        return chans;
+    static textChannel(guild: Guild, str: string) {
+        return guild.channels.cache.filter(c => (c instanceof TextChannel || c instanceof NewsChannel) && channelFilterInexact(str)(c)) as Collection<
+            string,
+            TextChannel | NewsChannel
+        >;
     }
 }
 
-export async function parseType(type: 'number', str: string): Promise<number | void>;
+export interface ParseTypes {
+    number: number;
+    boolean: boolean;
+    color: string;
+    string: string;
+    url: string;
+    snowflake: string;
+    timeLength: number;
+    bannedUser: Promise<Collection<string, Ban>>;
+    guildMember: Collection<string, GuildMember>;
+    role: Collection<string, Role>;
+    textChannel: Collection<string, TextChannel | NewsChannel>;
+    voiceChannel: Collection<string, VoiceChannel>;
+    guildChannel: Collection<string, GuildChannel>;
+}
+export function parseType<K extends keyof ParseTypes>(type: K, str: string, guild?: Guild): ParseTypes[K];
 
-export async function parseType(type: 'color', str: string): Promise<string | void>;
-
-export async function parseType(type: 'string', str: string): Promise<string | void>;
-
-export async function parseType(type: 'url', str: string): Promise<string | void>;
-
-export async function parseType(type: 'guildMember', str: string, guild: Guild): Promise<Collection<string, GuildMember>>;
-
-export async function parseType(type: 'bannedUser', str: string, guild: Guild): Promise<Collection<string, { user: User; reason: string }> | void>;
-
-export async function parseType(type: 'role', str: string, guild: Guild): Promise<Collection<string, Role> | void>;
-
-export async function parseType(type: 'textChannel', str: string, guild: Guild): Promise<Collection<string, TextChannel | NewsChannel> | void>;
-
-export async function parseType(type: 'voiceChannel', str: string, guild: Guild): Promise<Collection<string, VoiceChannel> | void>;
-
-export async function parseType(type: 'guildChannel', str: string, guild: Guild): Promise<Collection<string, GuildChannel> | void>;
-
-export async function parseType(type: 'boolean', str: string): Promise<boolean | void>;
-
-export async function parseType(type: 'snowflake', str: string): Promise<string | void>;
-
-export async function parseType(type: 'timeLength', str: string): Promise<number | void>;
-
-export async function parseType(
-    type: ValueType,
-    str: string,
-    guild?: Guild
-): Promise<
-    | number
-    | string
-    | Collection<string, GuildMember>
-    | Collection<string, Role>
-    | Collection<string, VoiceChannel>
-    | Collection<string, GuildChannel>
-    | Collection<string, TextChannel | NewsChannel>
-    | boolean
-    | Collection<string, { user: User; reason: string }>
-    | void
->;
-
-export async function parseType(
-    type: ValueType,
-    str: string,
-    guild?: Guild
-): Promise<
-    | number
-    | string
-    | Collection<string, GuildMember>
-    | Collection<string, Role>
-    | Collection<string, VoiceChannel>
-    | Collection<string, GuildChannel>
-    | Collection<string, TextChannel | NewsChannel>
-    | boolean
-    | Collection<string, { user: User; reason: string }>
-    | void
-> {
+export function parseType(type: keyof ParseTypes, str: string, guild?: Guild) {
     switch (type) {
         case 'number':
             return Parse.number(str);
@@ -335,27 +249,27 @@ export async function parseType(
         case 'url':
             return Parse.url(str);
         case 'guildMember':
-            if (!guild) throw new Error(`Attempted To Get Member In DMS`);
+            if (!guild) throw new Error(`Attempted to get Member without providing a Guild`);
 
             return Parse.member(guild, str);
         case 'bannedUser':
-            if (!guild) throw new Error(`Attempted To Get Member In DMS`);
+            if (!guild) throw new Error(`Attempted to get Member without providing a Guild`);
 
             return Parse.bannedUser(guild, str);
         case 'role':
-            if (!guild) throw new Error(`Attempted To Get Banned User In DMS`);
+            if (!guild) throw new Error(`Attempted to get Banned User without providing a Guild`);
 
             return Parse.role(guild, str);
         case 'textChannel':
-            if (!guild) throw new Error(`Attempted To Get Role In DMS`);
+            if (!guild) throw new Error(`Attempted to get Role without providing a Guild`);
 
             return Parse.textChannel(guild, str);
         case 'voiceChannel':
-            if (!guild) throw new Error(`Attempted To Get Text Channel In DMS`);
+            if (!guild) throw new Error(`Attempted to get Text Channel without providing a Guild`);
 
             return Parse.voiceChannel(guild, str);
         case 'guildChannel':
-            if (!guild) throw new Error(`Attempted To Get Voice Channel In DMS`);
+            if (!guild) throw new Error(`Attempted to get Voice Channel without providing a Guild`);
 
             return Parse.guildChannel(guild, str);
         case 'boolean':
@@ -365,6 +279,6 @@ export async function parseType(
         case 'timeLength':
             return Parse.timeLength(str);
         default:
-            return;
+            return null;
     }
 }

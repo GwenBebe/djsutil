@@ -1,5 +1,6 @@
 import { User, TextChannel, DMChannel, NewsChannel, Message, Guild } from 'discord.js';
 import { Client } from '../client/Client';
+import { Colors } from '../interfaces';
 import { newId } from '../helpers/ID';
 
 export class Gui {
@@ -9,9 +10,9 @@ export class Gui {
     channel: TextChannel | DMChannel | NewsChannel;
     client: Client;
     gui?: Message;
-    type?: 'BASIC' | 'INFO' | 'SUCCESS' | 'ERROR' = 'BASIC';
+    type?: keyof Colors = 'BASIC';
 
-    constructor(user: User, channel: TextChannel | DMChannel | NewsChannel, client: Client, guild?: Guild, type?: 'BASIC' | 'INFO' | 'SUCCESS' | 'ERROR') {
+    constructor(user: User, channel: TextChannel | DMChannel | NewsChannel, client: Client, guild?: Guild, type?: keyof Colors) {
         this.user = user;
         this.channel = channel;
         this.client = client;
@@ -28,7 +29,7 @@ export class Gui {
         return this.gui;
     }
 
-    async delete(options?: { timeout?: number; reason?: string }) {
+    delete(options?: { timeout?: number; reason?: string }) {
         this.client.guis.remove(this.id);
         return this.gui?.delete(options);
     }

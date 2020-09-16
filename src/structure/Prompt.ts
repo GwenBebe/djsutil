@@ -1,16 +1,11 @@
 import { User, TextChannel, Guild, DMChannel, NewsChannel, Message, Role, GuildChannel, VoiceChannel, GuildMember, Collection } from 'discord.js';
 import { Client } from '../client/Client';
+import { Colors } from '../interfaces';
 import { Gui } from './Gui';
 import { ValueType, parseType } from '../helpers/Parse';
 
 export class Prompt extends Gui {
-    constructor(
-        user: User,
-        channel: TextChannel | DMChannel | NewsChannel,
-        client: Client,
-        guild?: Guild,
-        type: 'BASIC' | 'INFO' | 'SUCCESS' | 'ERROR' = 'BASIC'
-    ) {
+    constructor(user: User, channel: TextChannel | DMChannel | NewsChannel, client: Client, guild?: Guild, type: keyof Colors = 'BASIC') {
         super(user, channel, client, guild, type);
     }
 

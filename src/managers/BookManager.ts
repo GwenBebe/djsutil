@@ -3,6 +3,7 @@ import { Book } from '../structure/Book';
 import { BaseManager } from './BaseManager';
 import { User, TextChannel, DMChannel, NewsChannel, Guild, MessageReaction, PartialUser } from 'discord.js';
 import { newId } from '../helpers/ID';
+import { Colors } from '../interfaces';
 
 /**
  * Manages paginator GUIs
@@ -44,7 +45,7 @@ export class BookManager extends BaseManager<Book> {
         channel: TextChannel | DMChannel | NewsChannel,
         perPage = 15,
         images = false,
-        type: 'BASIC' | 'INFO' | 'SUCCESS' | 'ERROR' = 'BASIC',
+        type: keyof Colors = 'BASIC',
         guild?: Guild
     ) {
         const book = new Book(name, items, user, channel, this.client, guild, type, perPage, images);

@@ -1,6 +1,7 @@
 import { Gui } from './Gui';
 import { User, TextChannel, DMChannel, NewsChannel, Guild } from 'discord.js';
 import { Client } from '../client/Client';
+import { Colors } from '../interfaces';
 
 export class Book extends Gui {
     name: string;
@@ -17,7 +18,7 @@ export class Book extends Gui {
         channel: TextChannel | DMChannel | NewsChannel,
         client: Client,
         guild?: Guild,
-        type: 'BASIC' | 'INFO' | 'SUCCESS' | 'ERROR' = 'BASIC',
+        type: keyof Colors = 'BASIC',
         perPage = 15,
         images = false
     ) {
@@ -118,7 +119,7 @@ export class Book extends Gui {
         gui.edit(embed).catch(() => null);
     }
 
-    async delete(options?: { timeout?: number; reason?: string }) {
+    delete(options?: { timeout?: number; reason?: string }) {
         this.client.guis.books.cache.delete(this.id);
         return this.gui?.delete(options);
     }
