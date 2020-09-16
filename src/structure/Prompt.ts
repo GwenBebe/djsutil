@@ -1,33 +1,29 @@
-import { User, TextChannel, Guild, DMChannel, NewsChannel, Message, Role, GuildChannel, VoiceChannel, GuildMember, Collection } from 'discord.js';
+import { User, TextChannel, Guild, DMChannel, NewsChannel, Message, Collection } from 'discord.js';
 import { Client } from '../client/Client';
+import { Colors, ParseTypes } from '../interfaces';
 import { Gui } from './Gui';
-import { ValueType, parseType } from '../helpers/Parse';
+import { parseType } from '../helpers/Parse';
+import { ValueType } from '../interfaces';
 
 export class Prompt extends Gui {
-    constructor(
-        user: User,
-        channel: TextChannel | DMChannel | NewsChannel,
-        client: Client,
-        guild?: Guild,
-        type: 'BASIC' | 'INFO' | 'SUCCESS' | 'ERROR' = 'BASIC'
-    ) {
+    constructor(user: User, channel: TextChannel | DMChannel | NewsChannel, client: Client, guild?: Guild, type: keyof Colors = 'BASIC') {
         super(user, channel, client, guild, type);
     }
 
-    async question(
+    async question<K extends ValueType>(
         title: string,
         description: string,
-        options?: { type?: ValueType; optional?: boolean; timeout?: number; retry?: boolean; lastResponse?: string }
+        options?: { type?: K; optional?: boolean; timeout?: number; retry?: boolean; lastResponse?: string }
     ): Promise<{
         canceled?: boolean;
         none?: boolean;
-        response?: Role | TextChannel | GuildChannel | VoiceChannel | { user: User; reason: string } | string | GuildMember | User | boolean | number;
-    } | void> {
+        response?: ParseTypes[K];
+    } | null> {
         const gui = this.gui || (await this.init());
 
-        if (!options) options = { type: 'string', timeout: 60000 };
-        if (!options.type) options.type = 'string';
-        if (!options.timeout) options.timeout = 60000;
+        if (!options) options = { type: 'string' as K, timeout: 60000 };
+        if (!options.type) options.type = 'string' as K;
+        if (!options.timeout) options!.timeout = 60000;
 
         gui.edit(
             this.client.embed
@@ -49,16 +45,17 @@ export class Prompt extends Gui {
             )
         ).first();
 
-        if (!response) return;
+        if (!response) return null;
 
         if (options.optional && response.content === 'none') return { none: true };
 
-        const parsed = await parseType(options.type, response.content);
+        let parsed = null;
+        parsed = (await parseType(options.type, response.content)) as ParseTypes[K];
 
         if (parsed instanceof Collection) {
             const first = parsed.first();
-            if (parsed.size === 1 && first) return { response: parsed.first() };
-            else if (parsed.size > 1) return;
+            if (parsed.size === 1 && first) return { response: first };
+            else if (parsed.size > 1) return null;
             else if (parsed.size === 0) {
                 options.retry = true;
                 return this.question(title, description, options);
@@ -69,5 +66,6 @@ export class Prompt extends Gui {
                 return this.question(title, description, options);
             } else return { response: parsed };
         }
+        return null;
     }
 }
