@@ -1,6 +1,7 @@
 import color from 'tinycolor2';
 import { GuildMember, Guild, TextChannel, NewsChannel, GuildChannel, Role, VoiceChannel, CategoryChannel, User, Collection } from 'discord.js';
 import timestring from 'timestring';
+import { ParseTypes } from '../interfaces/index';
 
 const linkRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
 
@@ -27,21 +28,6 @@ export const bannedMemberFilterInexact = (search: string) => (ban: Ban) =>
     ban.user.username.toLowerCase().includes(search.toLowerCase()) ||
     ban.user.tag.toLowerCase().includes(search.toLowerCase()) ||
     search.toLowerCase().includes(ban.user.id);
-
-export type ValueType =
-    | 'role'
-    | 'textChannel'
-    | 'guildChannel'
-    | 'voiceChannel'
-    | 'string'
-    | 'guildMember'
-    | 'bannedUser'
-    | 'boolean'
-    | 'number'
-    | 'color'
-    | 'url'
-    | 'snowflake'
-    | 'timeLength';
 
 /**
  * Used to parse strings into various values.
@@ -221,21 +207,6 @@ export class Parse {
     }
 }
 
-export interface ParseTypes {
-    number: number;
-    boolean: boolean;
-    color: string;
-    string: string;
-    url: string;
-    snowflake: string;
-    timeLength: number;
-    bannedUser: Promise<Collection<string, Ban>>;
-    guildMember: Collection<string, GuildMember>;
-    role: Collection<string, Role>;
-    textChannel: Collection<string, TextChannel | NewsChannel>;
-    voiceChannel: Collection<string, VoiceChannel>;
-    guildChannel: Collection<string, GuildChannel>;
-}
 export function parseType<K extends keyof ParseTypes>(type: K, str: string, guild?: Guild): ParseTypes[K];
 
 export function parseType(type: keyof ParseTypes, str: string, guild?: Guild) {
